@@ -1,0 +1,137 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Educational Game Development Guidelines
+
+## Project Overview
+This project aims to create an engaging educational game for a 2.8-year-old child, focusing on early learning concepts through interactive play.
+
+## Project Structure
+- Each game will be developed in its own folder under the project root
+- Example structure:
+  ```
+  prime_game_lab/
+  ├── plan.md                    # Overall project plan
+  ├── game1_name/               # First game folder
+  │   ├── README.md            # Game-specific documentation
+  │   ├── assets/              # Game assets
+  │   └── src/                 # Source code
+  ├── game2_name/               # Second game folder
+  │   ├── README.md
+  │   ├── assets/
+  │   └── src/
+  └── .cursor/
+      └── rules/
+          └── agents.mdc       # This guidelines file
+  ```
+
+## Project Documentation
+- Detailed game development plan will be maintained in `plan.md` at the root of the project
+- This file (agents.mdc) serves as high-level guidelines and principles
+- Implementation details and specific game features will be documented in plan.md
+- Each game folder will contain its own README.md with game-specific documentation
+
+## Target Audience
+- Primary: 2.5 to 3.5 years old children
+- Secondary: Parents and caregivers who want to engage in educational play with their children
+
+## Core Educational Goals
+1. **Early Learning Concepts**
+   - Color recognition
+   - Basic shapes
+   - Simple counting
+   - Pattern recognition
+   - Cause and effect understanding
+
+2. **Motor Skills Development**
+   - Fine motor control
+   - Hand-eye coordination
+   - Touch/click accuracy
+   - Spatial awareness
+
+3. **Cognitive Development**
+   - Problem-solving
+   - Memory skills
+   - Attention span
+   - Following instructions
+
+## Design Principles
+1. **Engagement**
+   - Age-appropriate themes
+   - Interactive elements
+   - Positive feedback
+   - Clear visual cues
+
+2. **Accessibility**
+   - Large touch/click areas
+   - High-contrast visuals
+   - Simple navigation
+   - Clear instructions
+
+3. **Learning Through Play**
+   - Fun-first approach
+   - Gentle learning curve
+   - Immediate feedback
+   - Celebrating achievements
+
+## Technical Guidelines
+1. **Platform Considerations**
+   - Choose platform based on accessibility and ease of use
+   - Ensure smooth performance
+   - Support appropriate input methods
+   - Consider offline functionality
+
+2. **Code Organization**
+   - Clear, maintainable structure
+   - Well-documented code
+   - Easy to modify parameters
+   - Scalable architecture
+
+3. **Asset Requirements**
+   - Child-friendly graphics
+   - Clear, readable text
+   - Engaging sound effects
+   - Smooth animations
+
+## Parent Features
+1. **Controls**
+   - Easy access to settings
+   - Progress monitoring
+   - Difficulty adjustment
+   - Safe exit options
+
+2. **Customization**
+   - Adjustable difficulty
+   - Theme options
+   - Sound controls
+   - Learning focus selection
+
+## Development Priorities
+1. **Core Gameplay**
+   - Solid educational foundation
+   - Engaging mechanics
+   - Reliable performance
+   - Intuitive interface
+
+2. **User Experience**
+   - Smooth interactions
+   - Clear feedback
+   - Appropriate pacing
+   - Error prevention
+
+3. **Educational Value**
+   - Measurable learning outcomes
+   - Age-appropriate content
+   - Progressive difficulty
+   - Skill reinforcement
+
+## Future Considerations
+- Additional learning concepts
+- New interactive elements
+- Progress tracking
+- Multi-language support
+- Accessibility features
+- Parent dashboard
+- Learning analytics
