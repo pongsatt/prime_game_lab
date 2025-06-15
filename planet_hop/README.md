@@ -1,119 +1,159 @@
 # Planet Hop
 
-A simple educational game for toddlers to practice color recognition and sequencing.
+A simple educational game for toddlers to practice color recognition and sequencing. Built with TypeScript and HTML5 Canvas.
 
-## Overview
+## 🎮 Game Overview
 
-Planet Hop is a one-scene desktop game designed for children aged 2-3 years. Players help an astronaut visit planets in the correct color sequence by clicking them in the prompted order. The game features:
+Planet Hop is an interactive space-themed game where children click planets in the correct order. An astronaut travels between planets in a rocket ship, providing visual feedback for correct sequences.
 
-- Color recognition practice (Red/Mars, Blue/Earth, Yellow/Sun)
-- Sequential memory development
-- Visual and audio feedback
-- Simple click-based interaction
-- Animated rocket movement between planets
-- Celebration effects for completed sequences
+### Educational Goals
+- Color recognition (Red/Mars, Blue/Earth, Yellow/Sun)
+- Sequential memory
+- Hand-eye coordination
+- Following instructions
 
-## Requirements
+## 🚀 Quick Start
 
-- macOS 10.15 or later (or Windows/Linux)
-- Godot 4.2 or later
-- Git
+### Prerequisites
+- Node.js (v14 or later)
+- npm (comes with Node.js)
 
-## Setup Instructions
+### Installation
 
-1. Install Godot 4.2
-   - Download from [Godot's official website](https://godotengine.org/download)
-   - Extract and move to Applications folder (macOS) or install as appropriate for your OS
-   - Launch Godot and verify installation
-
-2. Clone the repository
+1. Clone or download this project
+2. Navigate to the project directory:
    ```bash
-   git clone [repository-url]
-   cd planet-hop
+   cd planet_hop
    ```
 
-3. Open the project
-   - Launch Godot
-   - Click "Import"
-   - Navigate to the cloned directory
-   - Select the project.godot file
-   - Click "Import & Edit"
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-4. Run the game
-   - Click the "Play" button in the top-right corner
-   - Or press F5
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
-## How to Play
+5. The game will automatically open in your browser at `http://localhost:8080`
 
-1. The game displays a prompt asking the child to click a specific colored planet
-2. Click the correct planet to make the rocket fly to it
-3. Complete the sequence of three planets to win the round
-4. Wrong clicks result in a gentle error feedback
-5. Each round generates a new random sequence
+## 🎯 How to Play
 
-## Development
+1. Watch for the prompt at the top of the screen (e.g., "Click the Mars!")
+2. Click the correct planet
+3. The rocket will fly to the planet if correct
+4. Complete all three planets in the sequence to finish a round
+5. Each round presents a new random sequence
+
+### Controls
+- **Mouse**: Click on planets
+- **Touch**: Tap on planets (tablet support)
+
+## 🛠️ Development
 
 ### Project Structure
 ```
 planet_hop/
-├── README.md               # This file
-├── project.godot          # Godot project configuration
-├── scenes/                # Game scenes
-│   └── Main.tscn         # Main game scene
-├── scripts/              # Game scripts
-│   └── Main.gd          # Main game logic
-└── assets/              # Game assets (sprites, audio)
-    ├── sprites/
-    └── audio/
+├── src/
+│   ├── index.ts      # Entry point
+│   ├── game.ts       # Main game logic
+│   ├── types.ts      # TypeScript interfaces
+│   ├── audio.ts      # Sound effects manager
+│   └── index.html    # HTML template
+├── assets/           # Game assets (if any)
+├── dist/            # Built files (generated)
+├── package.json     # Project configuration
+├── tsconfig.json    # TypeScript configuration
+└── webpack.config.js # Build configuration
 ```
 
-### Key Features
-- **Educational Focus**: Color recognition and sequencing
-- **Toddler-Friendly**: Large click areas, clear visuals
-- **Positive Reinforcement**: Celebration effects and encouraging feedback
-- **Simple Controls**: Click-only interaction
+### Available Scripts
 
-## Building for Distribution
+- `npm start` - Start development server with hot reload
+- `npm run build` - Build for production
+- `npm run dev` - Build for development
 
-### macOS
-1. In Godot, go to Project > Export
-2. Click "Add..." and select "macOS"
-3. Configure export settings:
-   - Application name: Planet Hop
-   - Bundle identifier: com.example.planethop
-4. Click "Export Project"
-5. Choose destination and click "Save"
+### Building for Production
 
-### Windows
-1. In Godot, go to Project > Export
-2. Click "Add..." and select "Windows Desktop"
-3. Configure export settings
-4. Click "Export Project"
-5. Choose destination and click "Save"
+To create a production build:
 
-## Testing
+```bash
+npm run build
+```
 
-Basic tests to verify:
-- [x] Game launches correctly
-- [x] Planets are clickable
-- [x] Sequence progression works
-- [x] Visual feedback displays properly
-- [x] Game resets after completing a round
-- [x] Error feedback for wrong clicks
+The built files will be in the `dist/` directory. You can deploy these files to any static web hosting service.
 
-## Future Enhancements
+## 🎨 Customization
 
-- Add actual audio files for sound effects
-- Create custom planet and character sprites
-- Add difficulty levels
-- Implement progress tracking
-- Add more educational content (numbers, letters)
-- Create a parent settings menu
+### Changing Colors
+Edit the planet colors in `src/game.ts`:
+```typescript
+const planetData = [
+    { name: 'Mars', color: '#FF6B6B', x: 320, y: 400 },
+    { name: 'Earth', color: '#4ECDC4', x: 640, y: 400 },
+    { name: 'Sun', color: '#FFE66D', x: 960, y: 400 }
+];
+```
 
-## License
+### Adjusting Difficulty
+- Change the number of planets in the sequence
+- Adjust the delay between rounds
+- Modify planet sizes or positions
 
-This project is created for educational purposes. Feel free to modify and use as needed.
+## 🔊 Sound Effects
 
-## Credits
+The game uses Web Audio API to generate synthetic sound effects:
+- **Hop sound**: Plays when clicking the correct planet
+- **Error sound**: Plays when clicking the wrong planet
+- **Success sound**: Plays when completing a round
 
-Created as an educational game for toddlers to learn colors and sequences through interactive play.
+## 📱 Browser Support
+
+- Chrome (recommended)
+- Firefox
+- Safari
+- Edge
+- Mobile browsers with touch support
+
+## 🐛 Troubleshooting
+
+### Game doesn't load
+- Ensure Node.js is installed correctly
+- Try clearing your browser cache
+- Check the browser console for errors
+
+### No sound
+- Check your browser allows audio playback
+- Some browsers require user interaction before playing audio
+
+### Performance issues
+- Close other browser tabs
+- Try a different browser
+- Ensure your device meets minimum requirements
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
+## 👨‍👩‍👧‍👦 For Parents
+
+This game is designed for children aged 2.5-3.5 years. Features include:
+- Large, easy-to-click targets
+- Clear visual feedback
+- Positive reinforcement
+- No ads or external links
+- Safe, controlled environment
+
+Tips for playing with your child:
+- Sit together and name the colors
+- Celebrate their successes
+- Help them understand the sequence
+- Take breaks as needed 
