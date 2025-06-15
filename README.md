@@ -17,8 +17,8 @@ A simple educational game for toddlers to practice color recognition and sequenc
 
 2. Clone the repository
    ```bash
-   git clone https://github.com/pongsatt/planet-hop.git
-   cd planet-hop
+   git clone https://github.com/pongsatt/prime_game_lab.git
+   cd prime_game_lab
    ```
 
 3. Open the project
