@@ -1,16 +1,35 @@
-# Planet Hop
+# Planet Hop - Educational Color Recognition Game
 
-A simple educational game for toddlers to practice color recognition and sequencing. Built with TypeScript and HTML5 Canvas.
+An engaging space-themed educational game designed for children aged 2.5-3.5 years, focusing on color recognition, memory skills, and visual learning through interactive play.
 
 ## 🎮 Game Overview
 
-Planet Hop is an interactive space-themed game where children click planets in the correct order. An astronaut travels between planets in a rocket ship, providing visual feedback for correct sequences.
+Planet Hop features an astronaut character who jumps between colorful planets in a specific sequence. The game uses visual guides instead of text, making it perfect for pre-readers.
+
+### Key Features
+
+- **Visual Learning**: No reading required - uses icons, animations, and visual cues
+- **Astronaut Character**: A friendly astronaut who jumps between planets with fun animations
+- **Interactive Planets**: Each planet has unique visual characteristics and symbols
+- **Visual Guidance System**: 
+  - Glowing rings highlight target planets
+  - Animated arrows point the way
+  - Eye icon shows when to watch the sequence
+  - Play icon indicates when it's your turn
+- **Engaging Effects**:
+  - Shooting stars in the background
+  - Nebula effects for atmosphere
+  - Particle effects for successful jumps
+  - Celebration animations
 
 ### Educational Goals
-- Color recognition (Red/Mars, Blue/Earth, Yellow/Sun)
-- Sequential memory
-- Hand-eye coordination
-- Following instructions
+
+- **Color Recognition**: Learn to identify and remember colors (Red/Mars, Blue/Earth, Yellow/Sun)
+- **Memory Skills**: Remember and repeat sequences
+- **Visual Pattern Recognition**: Follow visual cues and patterns
+- **Motor Skills**: Click/tap accuracy and hand-eye coordination
+- **Cause and Effect**: Immediate visual and audio feedback
+- **Sequential Memory**: Following instructions in order
 
 ## 🚀 Quick Start
 
@@ -40,10 +59,10 @@ Planet Hop is an interactive space-themed game where children click planets in t
 
 ## 🎯 How to Play
 
-1. Watch for the prompt at the top of the screen (e.g., "Click the Mars!")
-2. Click the correct planet
-3. The rocket will fly to the planet if correct
-4. Complete all three planets in the sequence to finish a round
+1. **Watch Phase**: An eye icon appears, and planets light up one by one showing the sequence
+2. **Play Phase**: A play arrow appears, and glowing rings with arrows guide you to click planets in order
+3. **Success**: The astronaut jumps to each planet with fun animations
+4. **Celebration**: Stars appear around the astronaut when you complete a round
 5. Each round presents a new random sequence
 
 ### Controls
@@ -108,6 +127,16 @@ The game uses Web Audio API to generate synthetic sound effects:
 - **Error sound**: Plays when clicking the wrong planet
 - **Success sound**: Plays when completing a round
 
+## Visual Design
+
+- **Astronaut**: Detailed character with animated limbs, helmet shine, and antenna
+- **Planets**: 
+  - Mars (Red): Features craters and Mars symbol (♂)
+  - Earth (Blue): Shows continents and Earth symbol (⊕)
+  - Sun (Yellow): Has radiating rays and Sun symbol (☉)
+- **Background**: Space gradient with twinkling stars and nebula effects
+- **UI Elements**: Visual indicators replace all text prompts
+
 ## 📱 Browser Support
 
 - Chrome (recommended)
@@ -124,7 +153,7 @@ The game uses Web Audio API to generate synthetic sound effects:
 - Check the browser console for errors
 
 ### No sound
-- Check your browser allows audio playback
+- Check your browser allows audio playbook
 - Some browsers require user interaction before playing audio
 
 ### Performance issues
@@ -156,4 +185,4 @@ Tips for playing with your child:
 - Sit together and name the colors
 - Celebrate their successes
 - Help them understand the sequence
-- Take breaks as needed 
+- Take breaks as needed

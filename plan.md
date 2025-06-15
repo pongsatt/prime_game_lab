@@ -6,6 +6,27 @@ Build **Planet Hop**: a one-scene web-based game that helps a 2 y 8 m child prac
 
 # IMPLEMENTATION STATUS ✅
 
+## Latest Updates (Visual-Based Gameplay) [✅]
+- [x] Replaced text prompts with visual guides
+  - [x] Glowing rings around target planets
+  - [x] Animated arrows pointing to next planet
+  - [x] Eye icon for "watch" phase
+  - [x] Play arrow for "play" phase
+- [x] Made astronaut the main character
+  - [x] Astronaut now jumps between planets
+  - [x] Added jumping animations with rotation
+  - [x] Animated limbs (arms and legs)
+  - [x] Added shadow effects
+  - [x] Celebration animations
+- [x] Enhanced visual interest
+  - [x] Gradient space background
+  - [x] Nebula effects
+  - [x] Shooting stars
+  - [x] Planet textures (craters, continents, sun rays)
+  - [x] Visual symbols instead of text (♂, ⊕, ☉)
+  - [x] Enhanced particle effects
+  - [x] Visual score display with stars
+
 ## 1. Development Environment [✅]
 - [x] Set up TypeScript project
   - [x] Initialize npm project
@@ -90,31 +111,38 @@ Build **Planet Hop**: a one-scene web-based game that helps a 2 y 8 m child prac
    - Hover effects on desktop
 
 4. **Core Game Elements**
-   - **Astronaut Character**
-     - Position: Top-center
-     - Simple drawn graphics
-     - Static position
+   - **Astronaut Character** (UPDATED)
+     - Main playable character
+     - Jumping animations between planets
+     - Animated limbs and rotation
+     - Shadow effects
+     - Detailed spacesuit with antenna
+     - Celebration animations
 
-   - **Planets**
+   - **Planets** (ENHANCED)
      - Count: 3 (Mars, Earth, Sun)
-     - Interactive with hover effects
-     - Click detection
-     - Smooth scaling animations
+     - Visual symbols instead of text
+     - Planet-specific textures
+     - Glow effects on hover
+     - Visual highlighting during sequence
 
-   - **Rocket Ship**
-     - Animated movement between planets
-     - Rotation based on direction
-     - Flame effects during movement
+   - **Visual Guide System** (NEW)
+     - Glowing rings around target planets
+     - Animated arrows pointing direction
+     - Pulsing effects for attention
+     - No text required
 
-   - **Background**
+   - **Background** (ENHANCED)
+     - Gradient space background
      - Twinkling stars effect
-     - Dark space theme
+     - Nebula effects
+     - Shooting stars
      - Particle system for celebrations
 
-   - **UI Elements**
-     - Prompt text at top
-     - Score display
-     - Menu button (visual only)
+   - **UI Elements** (VISUAL-ONLY)
+     - Visual status indicators (eye/play icons)
+     - Score display with star icons
+     - No text prompts - all visual cues
 
 5. **Game Logic**
    - **Sequence Generation**

@@ -44,5 +44,20 @@ export interface GameState {
         x: number;
         y: number;
         scale: number;
+        targetX: number;
+        targetY: number;
+        rotation: number;
+        isJumping: boolean;
+        jumpProgress: number;
+        armAngle: number;
+        legAngle: number;
     };
+    visualGuide: {
+        active: boolean;
+        targetPlanet: Planet | null;
+        arrowPulse: number;
+        highlightPulse: number;
+    };
+    showingSequence: boolean;
+    sequenceShowIndex: number;
 } 
