@@ -17,7 +17,7 @@ A simple educational game for toddlers to practice color recognition and sequenc
 
 2. Clone the repository
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/pongsatt/planet-hop.git
    cd planet-hop
    ```
 
