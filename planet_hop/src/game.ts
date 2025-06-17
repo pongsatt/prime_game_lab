@@ -42,7 +42,9 @@ export class PlanetHopGame {
             highlightPulse: 0
         },
         showingSequence: false,
-        sequenceShowIndex: 0
+        sequenceShowIndex: 0,
+        showInstructions: true,
+        instructionStep: 0
     };
     
     private flashAlpha: number = 0;
@@ -95,11 +97,11 @@ export class PlanetHopGame {
             });
         }
         
-        // Create planets
+        // Create planets with more realistic colors
         const planetData = [
-            { name: 'Mars', color: '#FF6B6B', x: 320, y: 400 },
-            { name: 'Earth', color: '#4ECDC4', x: 640, y: 400 },
-            { name: 'Sun', color: '#FFE66D', x: 960, y: 400 }
+            { name: 'Moon', color: '#E8E8E8', x: 320, y: 400 },
+            { name: 'Earth', color: '#2E86AB', x: 640, y: 400 },
+            { name: 'Mars', color: '#CD5334', x: 960, y: 400 }
         ];
         
         planetData.forEach(data => {
@@ -121,10 +123,7 @@ export class PlanetHopGame {
         this.gameState.astronaut.targetX = this.gameState.astronaut.x;
         this.gameState.astronaut.targetY = this.gameState.astronaut.y;
         
-        // Start first round
-        this.startNewRound();
-        
-        // Start game loop
+        // Start game loop (instructions will show first)
         this.gameLoop();
     }
     
@@ -151,6 +150,17 @@ export class PlanetHopGame {
     }
     
     private handleClickAt(x: number, y: number) {
+        // Handle instruction screen clicks
+        if (this.gameState.showInstructions) {
+            if (this.gameState.instructionStep < 2) {
+                this.gameState.instructionStep++;
+            } else {
+                this.gameState.showInstructions = false;
+                this.startNewRound();
+            }
+            return;
+        }
+        
         if (!this.gameState.isPlaying || this.gameState.showingSequence) return;
         
         // Check if any planet was clicked
@@ -359,6 +369,9 @@ export class PlanetHopGame {
         // Make astronaut celebrate
         this.gameState.astronaut.armAngle = Math.PI / 4;
         
+        // Show educational message
+        this.showEducationalMessage();
+        
         // Create celebration particles
         for (let i = 0; i < 50; i++) {
             this.particles.push({
@@ -367,7 +380,7 @@ export class PlanetHopGame {
                 vx: (Math.random() - 0.5) * 2,
                 vy: Math.random() * 3 + 2,
                 size: Math.random() * 6 + 3,
-                color: ['#FF6B6B', '#4ECDC4', '#FFE66D'][Math.floor(Math.random() * 3)],
+                color: ['#E8E8E8', '#2E86AB', '#CD5334'][Math.floor(Math.random() * 3)],
                 life: 1
             });
         }
@@ -389,7 +402,14 @@ export class PlanetHopGame {
         setTimeout(() => {
             this.gameState.astronaut.armAngle = 0;
             this.startNewRound();
-        }, 2500);
+        }, 3500);
+    }
+    
+    private showEducationalMessage() {
+        // This will be drawn in the render method
+        setTimeout(() => {
+            // Message will be shown for 2 seconds during the celebration
+        }, 500);
     }
     
     private update(deltaTime: number) {
@@ -523,19 +543,41 @@ export class PlanetHopGame {
             this.ctx.scale(planet.scale, planet.scale);
             
             // Planet shadow
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
             this.ctx.beginPath();
-            this.ctx.arc(5, 5, planet.radius, 0, Math.PI * 2);
+            this.ctx.arc(8, 8, planet.radius, 0, Math.PI * 2);
             this.ctx.fill();
             
-            // Planet glow when hovered
-            if (planet.isHovered) {
+            // Planet glow when hovered or during sequence
+            if (planet.isHovered || (this.gameState.showingSequence && 
+                this.gameState.sequence[this.gameState.sequenceShowIndex] === planet.name)) {
                 this.ctx.shadowColor = planet.color;
-                this.ctx.shadowBlur = 30;
+                this.ctx.shadowBlur = 50;
+                this.ctx.shadowOffsetX = 0;
+                this.ctx.shadowOffsetY = 0;
             }
             
-            // Planet
-            this.ctx.fillStyle = planet.color;
+            // Planet base gradient
+            const planetGradient = this.ctx.createRadialGradient(
+                -planet.radius * 0.3, -planet.radius * 0.3, 0,
+                0, 0, planet.radius
+            );
+            
+            if (planet.name === 'Earth') {
+                planetGradient.addColorStop(0, '#4A90E2');
+                planetGradient.addColorStop(0.7, '#2E86AB');
+                planetGradient.addColorStop(1, '#1E5A7B');
+            } else if (planet.name === 'Mars') {
+                planetGradient.addColorStop(0, '#E67E50');
+                planetGradient.addColorStop(0.7, '#CD5334');
+                planetGradient.addColorStop(1, '#8B3220');
+            } else if (planet.name === 'Moon') {
+                planetGradient.addColorStop(0, '#F5F5F5');
+                planetGradient.addColorStop(0.7, '#E8E8E8');
+                planetGradient.addColorStop(1, '#C0C0C0');
+            }
+            
+            this.ctx.fillStyle = planetGradient;
             this.ctx.beginPath();
             this.ctx.arc(0, 0, planet.radius, 0, Math.PI * 2);
             this.ctx.fill();
@@ -543,87 +585,184 @@ export class PlanetHopGame {
             // Reset shadow
             this.ctx.shadowBlur = 0;
             
-            // Planet texture/pattern
-            this.ctx.globalAlpha = 0.3;
+            // Planet texture/pattern with more realistic details
             if (planet.name === 'Mars') {
-                // Mars craters
-                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                // Mars surface features - more detailed
+                this.ctx.globalAlpha = 0.3;
+                this.ctx.fillStyle = '#8B3220';
                 this.ctx.beginPath();
-                this.ctx.arc(-20, -20, 15, 0, Math.PI * 2);
+                this.ctx.arc(-25, -15, 18, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.arc(25, 10, 10, 0, Math.PI * 2);
+                this.ctx.arc(30, 5, 12, 0, Math.PI * 2);
                 this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(-5, 30, 15, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(15, -30, 10, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Valles Marineris (large canyon)
+                this.ctx.strokeStyle = 'rgba(100, 40, 20, 0.4)';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.moveTo(-40, 0);
+                this.ctx.bezierCurveTo(-20, 5, 20, -5, 40, 0);
+                this.ctx.stroke();
+                
+                // Polar ice caps
+                this.ctx.globalAlpha = 0.7;
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, -planet.radius + 15, 25, 12, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, planet.radius - 15, 20, 10, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
             } else if (planet.name === 'Earth') {
-                // Earth continents
-                this.ctx.fillStyle = 'rgba(0, 100, 0, 0.5)';
+                // Earth continents with more detail
+                this.ctx.globalAlpha = 0.7;
+                
+                // Ocean darker areas
+                this.ctx.fillStyle = '#1E5A7B';
                 this.ctx.beginPath();
-                this.ctx.arc(-20, 0, 25, 0, Math.PI * 2);
+                this.ctx.arc(35, 20, 15, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Continents (green land masses)
+                this.ctx.fillStyle = '#228B22';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-20, -5, 30, 25, 0.2, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.arc(20, -10, 20, 0, Math.PI * 2);
+                this.ctx.ellipse(25, -15, 22, 18, -0.3, 0, Math.PI * 2);
                 this.ctx.fill();
-            } else if (planet.name === 'Sun') {
-                // Sun rays
+                this.ctx.beginPath();
+                this.ctx.ellipse(5, 25, 18, 15, 0.5, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Sandy/desert areas
+                this.ctx.globalAlpha = 0.4;
+                this.ctx.fillStyle = '#DEB887';
+                this.ctx.beginPath();
+                this.ctx.arc(-10, -20, 8, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Clouds with swirls
+                this.ctx.globalAlpha = 0.5;
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-25, -30, 15, 8, 0.3, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(30, 15, 12, 6, -0.5, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 35, 10, 5, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Atmosphere glow
+                this.ctx.globalAlpha = 0.2;
+                this.ctx.strokeStyle = '#87CEEB';
+                this.ctx.lineWidth = 8;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, planet.radius + 4, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+            } else if (planet.name === 'Moon') {
+                // Moon craters with depth
+                this.ctx.globalAlpha = 0.4;
+                
+                // Large craters
+                this.ctx.fillStyle = '#A9A9A9';
+                this.ctx.beginPath();
+                this.ctx.arc(-25, -20, 15, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.fillStyle = '#808080';
+                this.ctx.beginPath();
+                this.ctx.arc(-25, -20, 12, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                this.ctx.fillStyle = '#A9A9A9';
+                this.ctx.beginPath();
+                this.ctx.arc(30, 10, 10, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.fillStyle = '#808080';
+                this.ctx.beginPath();
+                this.ctx.arc(30, 10, 8, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Medium craters
+                this.ctx.fillStyle = '#A9A9A9';
+                this.ctx.beginPath();
+                this.ctx.arc(-10, 25, 12, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(15, -30, 8, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, 6, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Small craters for texture
+                this.ctx.globalAlpha = 0.3;
+                this.ctx.fillStyle = '#696969';
                 for (let i = 0; i < 8; i++) {
                     const angle = (i * Math.PI * 2) / 8;
-                    this.ctx.strokeStyle = 'rgba(255, 255, 0, 0.5)';
-                    this.ctx.lineWidth = 3;
+                    const r = planet.radius * 0.6;
+                    const x = Math.cos(angle) * r;
+                    const y = Math.sin(angle) * r;
                     this.ctx.beginPath();
-                    this.ctx.moveTo(Math.cos(angle) * planet.radius * 0.8, Math.sin(angle) * planet.radius * 0.8);
-                    this.ctx.lineTo(Math.cos(angle) * planet.radius * 1.2, Math.sin(angle) * planet.radius * 1.2);
-                    this.ctx.stroke();
+                    this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    this.ctx.fill();
                 }
+                
+                // Mare (dark areas)
+                this.ctx.globalAlpha = 0.2;
+                this.ctx.fillStyle = '#5A5A5A';
+                this.ctx.beginPath();
+                this.ctx.ellipse(20, -10, 25, 20, 0.5, 0, Math.PI * 2);
+                this.ctx.fill();
             }
             this.ctx.globalAlpha = 1;
             
-            // Planet highlight
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            // Realistic planet highlight and shading
+            const highlightGradient = this.ctx.createRadialGradient(
+                -planet.radius * 0.4, -planet.radius * 0.4, 0,
+                -planet.radius * 0.4, -planet.radius * 0.4, planet.radius * 0.5
+            );
+            highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+            highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
+            highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            this.ctx.fillStyle = highlightGradient;
             this.ctx.beginPath();
-            this.ctx.arc(-planet.radius * 0.3, -planet.radius * 0.3, planet.radius * 0.4, 0, Math.PI * 2);
+            this.ctx.arc(-planet.radius * 0.3, -planet.radius * 0.3, planet.radius * 0.5, 0, Math.PI * 2);
             this.ctx.fill();
             
-            // Visual icon instead of text
-            this.ctx.fillStyle = 'white';
-            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-            this.ctx.lineWidth = 3;
+            // Add subtle edge shading for 3D effect
+            const edgeGradient = this.ctx.createRadialGradient(
+                0, 0, planet.radius * 0.8,
+                0, 0, planet.radius
+            );
+            edgeGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            edgeGradient.addColorStop(0.8, 'rgba(0, 0, 0, 0.1)');
+            edgeGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
+            this.ctx.fillStyle = edgeGradient;
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, planet.radius, 0, Math.PI * 2);
+            this.ctx.fill();
             
-            if (planet.name === 'Mars') {
-                // Mars symbol (circle with arrow)
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, 20, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.moveTo(14, -14);
-                this.ctx.lineTo(25, -25);
-                this.ctx.lineTo(25, -15);
-                this.ctx.moveTo(25, -25);
-                this.ctx.lineTo(15, -25);
-                this.ctx.stroke();
-            } else if (planet.name === 'Earth') {
-                // Earth symbol (circle with cross)
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, 20, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.moveTo(0, -20);
-                this.ctx.lineTo(0, 20);
-                this.ctx.moveTo(-20, 0);
-                this.ctx.lineTo(20, 0);
-                this.ctx.stroke();
-            } else if (planet.name === 'Sun') {
-                // Sun symbol (circle with dot)
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, 20, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.fill();
-                this.ctx.fillStyle = planet.color;
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, 8, 0, Math.PI * 2);
-                this.ctx.fill();
-            }
+            // Planet names with educational text
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = 'bold 20px Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+            this.ctx.lineWidth = 4;
+            this.ctx.strokeText(planet.name, 0, planet.radius + 30);
+            this.ctx.fillText(planet.name, 0, planet.radius + 30);
             
             this.ctx.restore();
         });
@@ -653,6 +792,16 @@ export class PlanetHopGame {
         if (this.isFlashing) {
             this.ctx.fillStyle = `rgba(255, 0, 0, ${this.flashAlpha})`;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
+        // Draw instructions if showing
+        if (this.gameState.showInstructions) {
+            this.drawInstructions();
+        }
+        
+        // Draw educational message during celebration
+        if (this.gameState.score > 0 && !this.gameState.isPlaying && !this.gameState.showingSequence) {
+            this.drawEducationalMessage();
         }
     }
     
@@ -808,28 +957,48 @@ export class PlanetHopGame {
     }
     
     private drawUI() {
-        // Draw score with stars
+        // Draw score with stars - larger and more prominent
         this.ctx.save();
         
-        // Score background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.fillRect(20, 20, 200, 60);
-        this.ctx.strokeStyle = 'white';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(20, 20, 200, 60);
+        // Score background - bigger and darker
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        this.ctx.fillRect(20, 20, 320, 100);
+        this.ctx.strokeStyle = '#FFE66D';
+        this.ctx.lineWidth = 4;
+        this.ctx.strokeRect(20, 20, 320, 100);
         
-        // Draw stars for score
-        for (let i = 0; i < Math.min(this.gameState.score, 5); i++) {
-            this.ctx.fillStyle = '#FFE66D';
-            this.drawStar(50 + i * 35, 50, 15);
-        }
-        
-        // Score number
+        // Score label
         this.ctx.fillStyle = 'white';
         this.ctx.font = 'bold 24px Arial';
         this.ctx.textAlign = 'left';
+        this.ctx.textBaseline = 'top';
+        this.ctx.fillText('SCORE:', 35, 30);
+        
+        // Draw stars for score - bigger
+        for (let i = 0; i < Math.min(this.gameState.score, 5); i++) {
+            this.ctx.fillStyle = '#FFE66D';
+            this.ctx.shadowColor = '#FFE66D';
+            this.ctx.shadowBlur = 10;
+            this.drawStar(60 + i * 45, 75, 20);
+            this.ctx.shadowBlur = 0;
+        }
+        
+        // Draw empty stars for remaining
+        for (let i = this.gameState.score; i < 5; i++) {
+            this.ctx.strokeStyle = '#FFE66D';
+            this.ctx.lineWidth = 2;
+            this.drawStarOutline(60 + i * 45, 75, 20);
+        }
+        
+        // Score number - much bigger
+        this.ctx.fillStyle = '#FFE66D';
+        this.ctx.font = 'bold 56px Arial';
+        this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        this.ctx.fillText(`${this.gameState.score}`, 180, 50);
+        this.ctx.shadowColor = '#FFE66D';
+        this.ctx.shadowBlur = 15;
+        this.ctx.fillText(`${this.gameState.score}`, 290, 70);
+        this.ctx.shadowBlur = 0;
         
         // Draw visual status indicator
         if (this.gameState.showingSequence) {
@@ -893,6 +1062,164 @@ export class PlanetHopGame {
         this.ctx.closePath();
         this.ctx.fill();
         this.ctx.restore();
+    }
+    
+    private drawStarOutline(x: number, y: number, size: number) {
+        this.ctx.save();
+        this.ctx.translate(x, y);
+        this.ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            const angle = (i * Math.PI * 2) / 5 - Math.PI / 2;
+            const innerAngle = ((i + 0.5) * Math.PI * 2) / 5 - Math.PI / 2;
+            
+            if (i === 0) {
+                this.ctx.moveTo(Math.cos(angle) * size, Math.sin(angle) * size);
+            } else {
+                this.ctx.lineTo(Math.cos(angle) * size, Math.sin(angle) * size);
+            }
+            this.ctx.lineTo(Math.cos(innerAngle) * size * 0.5, Math.sin(innerAngle) * size * 0.5);
+        }
+        this.ctx.closePath();
+        this.ctx.stroke();
+        this.ctx.restore();
+    }
+    
+    private drawInstructions() {
+        // Dark overlay
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Instruction background
+        this.ctx.fillStyle = 'rgba(20, 20, 60, 0.95)';
+        this.ctx.fillRect(140, 60, 1000, 600);
+        this.ctx.strokeStyle = 'white';
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeRect(140, 60, 1000, 600);
+        
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        
+        if (this.gameState.instructionStep === 0) {
+            // Welcome screen
+            this.ctx.font = 'bold 48px Arial';
+            this.ctx.fillText('🚀 Welcome to Planet Hop! 🌎', this.canvas.width / 2, 150);
+            
+            this.ctx.font = '28px Arial';
+            this.ctx.fillText('Help the astronaut visit the planets in order!', this.canvas.width / 2, 220);
+            
+            // Draw sample planets
+            const samplePlanets = [
+                { name: 'Moon', color: '#E8E8E8', x: 320, y: 350 },
+                { name: 'Earth', color: '#2E86AB', x: 640, y: 350 },
+                { name: 'Mars', color: '#CD5334', x: 960, y: 350 }
+            ];
+            
+            samplePlanets.forEach(planet => {
+                this.ctx.save();
+                this.ctx.translate(planet.x, planet.y);
+                
+                // Planet
+                this.ctx.fillStyle = planet.color;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, 60, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Name
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = 'bold 24px Arial';
+                this.ctx.fillText(planet.name, 0, 90);
+                
+                this.ctx.restore();
+            });
+            
+            this.ctx.font = '24px Arial';
+            this.ctx.fillText('Click to continue...', this.canvas.width / 2, 580);
+            
+        } else if (this.gameState.instructionStep === 1) {
+            // How to play
+            this.ctx.font = 'bold 40px Arial';
+            this.ctx.fillText('How to Play', this.canvas.width / 2, 140);
+            
+            this.ctx.font = '26px Arial';
+            this.ctx.textAlign = 'left';
+            const instructions = [
+                '1. 👀 Watch carefully! The planets will light up in order.',
+                '2. 🌟 Remember the sequence shown.',
+                '3. 👆 Click the planets in the same order.',
+                '4. ✅ Get it right to score points!',
+                '5. 🎯 The astronaut will hop to each planet you click.'
+            ];
+            
+            instructions.forEach((text, index) => {
+                this.ctx.fillText(text, 200, 220 + index * 60);
+            });
+            
+            this.ctx.textAlign = 'center';
+            this.ctx.font = '24px Arial';
+            this.ctx.fillText('Click to continue...', this.canvas.width / 2, 580);
+            
+        } else {
+            // Educational facts
+            this.ctx.font = 'bold 40px Arial';
+            this.ctx.fillText('Fun Space Facts! 🌌', this.canvas.width / 2, 140);
+            
+            this.ctx.font = '24px Arial';
+            this.ctx.textAlign = 'left';
+            const facts = [
+                '🌙 The Moon is Earth\'s natural satellite',
+                '🌍 Earth is the only planet with liquid water on its surface',
+                '🔴 Mars is called the "Red Planet" because of iron oxide',
+                '🚀 It takes about 3 days to travel to the Moon',
+                '⭐ Each planet is unique and special!'
+            ];
+            
+            facts.forEach((text, index) => {
+                this.ctx.fillText(text, 200, 220 + index * 60);
+            });
+            
+            this.ctx.textAlign = 'center';
+            this.ctx.font = 'bold 32px Arial';
+            this.ctx.fillStyle = '#4ECDC4';
+            this.ctx.fillText('Click to start playing!', this.canvas.width / 2, 580);
+        }
+    }
+    
+    private drawEducationalMessage() {
+        const messages = [
+            'Great job exploring space! 🌟',
+            'You\'re a space navigator! 🚀',
+            'Amazing planet hopping! 🌍',
+            'You\'re learning about our solar system! ✨',
+            'Fantastic space journey! 🌌'
+        ];
+        
+        const funFacts = [
+            'Did you know? The Moon orbits Earth every 27 days!',
+            'Fun fact: Earth is 71% covered by water!',
+            'Cool! Mars has the largest volcano in our solar system!',
+            'Wow! You can see the Moon from Earth without a telescope!',
+            'Amazing! Mars appears red due to iron oxide on its surface!'
+        ];
+        
+        const messageIndex = (this.gameState.score - 1) % messages.length;
+        
+        // Message background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(this.canvas.width / 2 - 400, 200, 800, 150);
+        this.ctx.strokeStyle = '#FFE66D';
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeRect(this.canvas.width / 2 - 400, 200, 800, 150);
+        
+        // Success message
+        this.ctx.fillStyle = '#FFE66D';
+        this.ctx.font = 'bold 36px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(messages[messageIndex], this.canvas.width / 2, 250);
+        
+        // Fun fact
+        this.ctx.fillStyle = 'white';
+        this.ctx.font = '24px Arial';
+        this.ctx.fillText(funFacts[messageIndex], this.canvas.width / 2, 310);
     }
     
     private gameLoop() {

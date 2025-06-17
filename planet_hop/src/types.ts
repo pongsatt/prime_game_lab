@@ -60,4 +60,6 @@ export interface GameState {
     };
     showingSequence: boolean;
     sequenceShowIndex: number;
+    showInstructions: boolean;
+    instructionStep: number;
 } 
